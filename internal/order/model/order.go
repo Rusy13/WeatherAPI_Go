@@ -1,18 +1,24 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
-// Weather представляет данные о погоде для конкретного времени.
 type Weather struct {
-	DateTime           time.Time `json:"date_time"`
-	Temperature        float64   `json:"temperature"`
-	Humidity           float64   `json:"humidity"`
-	WindSpeed          float64   `json:"wind_speed"`
-	WeatherDescription string    `json:"weather_description"`
+	DateTime    time.Time `json:"date_time"`
+	Temperature float64   `json:"temperature"`
 }
 
-// CityForecast представляет прогноз погоды для города.
+// NullFloat64 представляет float64 значение с возможностью быть null
+type NullFloat64 struct {
+	Valid   bool
+	Float64 float64
+}
+
 type CityForecast struct {
 	City      string    `json:"city"`
+	Country   string    `json:"country"`
+	AvgTemp   float64   `json:"avg_temp"`
+	Dates     []string  `json:"dates"`
 	Forecasts []Weather `json:"forecasts"`
 }

@@ -6,29 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="326facec-21bc-4c50-a7f1-6834bf5f0e88" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/main/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/delivery/add_order.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/delivery/delivery.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/delivery/delivery.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/delivery/dto/add_order_dto.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/delivery/dto/order_response.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/delivery/get_order.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infrastructure/database/postgres/migrations/20240405181133_create_weather_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infrastructure/database/postgres/migrations/20240405181133_create_weather_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/order/delivery/get_city_forecast.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/delivery/get_city_forecast.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/order/model/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/model/order.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/service/add_order.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/service/get_user_banner.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/service/service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/add_order.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/dto/convert_to_order.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/dto/convert_to_order_cache.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/dto/order_db_dto.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/dto/order_from_cache.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/get_order_by_id.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/get_order_from_cache.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/get_orders.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/restore_cache.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/save_order_to_cache.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/order/storage/database/storage_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/storage/database/storage_db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/order/storage/storage.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/storage/storage.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/routes/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/routes/routes.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
