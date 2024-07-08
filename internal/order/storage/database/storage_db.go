@@ -28,6 +28,19 @@ func New(db database.Database, redisConn redis.Conn, logger *zap.SugaredLogger) 
 	}
 }
 
+func (s *WeatherStorageDB) GetCountryForCity(ctx context.Context, city string) (string, error) {
+	query := `SELECT country FROM cities WHERE name = $1`
+	row := s.db.QueryRow(ctx, query, city)
+
+	var country string
+	err := row.Scan(&country)
+	if err != nil {
+		return "", fmt.Errorf("failed to get country for city %s: %w", city, err)
+	}
+
+	return country, nil
+}
+
 func (s *WeatherStorageDB) SaveWeather(ctx context.Context, city string, weather model.Weather) error {
 	query := `
         INSERT INTO weather (city_name, date, temp, data)

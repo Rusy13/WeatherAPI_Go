@@ -16,9 +16,9 @@ type NullFloat64 struct {
 }
 
 type CityForecast struct {
-	City      string    `json:"city"`
-	Country   string    `json:"country"`
-	AvgTemp   float64   `json:"avg_temp"`
-	Dates     []string  `json:"dates"`
-	Forecasts []Weather `json:"forecasts"`
+	City           string    `json:"city"`
+	Country        string    `json:"country"`
+	AverageTemp    float64   `json:"average_temperature"`
+	AvailableDates []string  `json:"available_dates"`
+	Forecasts      []Weather `json:"forecasts"`
 }

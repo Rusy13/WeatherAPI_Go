@@ -101,7 +101,7 @@ func main() {
 
 	stOrder := storageOrder.New(db, redisConn, logger)
 	svOrder := serviceOrder.New(stOrder)
-	d := delivery.New(svOrder, logger)
+	d := delivery.New(svOrder, stOrder, logger)
 
 	mw := middleware.New(logger)
 	router := routes.GetRouter(d, mw)

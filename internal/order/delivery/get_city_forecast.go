@@ -18,6 +18,14 @@ func (d *WeatherDelivery) GetCityForecast(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// Get country for the city
+	country, err := d.storage.GetCountryForCity(r.Context(), city)
+	if err != nil {
+		d.logger.Errorf("error getting country for city %s: %v", city, err)
+		http.Error(w, fmt.Sprintf("error getting country for city %s", city), http.StatusInternalServerError)
+		return
+	}
+
 	type ForecastResponse struct {
 		Country        string          `json:"country"`
 		City           string          `json:"city"`
@@ -36,14 +44,18 @@ func (d *WeatherDelivery) GetCityForecast(w http.ResponseWriter, r *http.Request
 			Temperature: f.Temperature,
 		})
 	}
-	averageTemp := totalTemp / float64(len(forecast.Forecasts))
+	averageTemp := totalTemp / float64(len(validForecasts))
 
 	response := ForecastResponse{
-		Country:        forecast.Country,
+		Country:        country,
 		City:           forecast.City,
 		AverageTemp:    averageTemp,
-		AvailableDates: forecast.Dates,
+		AvailableDates: forecast.AvailableDates,
 		Forecasts:      validForecasts,
+	}
+
+	if response.Country == "" {
+		response.Country = "Unknown"
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -6,10 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="326facec-21bc-4c50-a7f1-6834bf5f0e88" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infrastructure/database/postgres/migrations/20240405181133_create_weather_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infrastructure/database/postgres/migrations/20240405181133_create_weather_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/order/delivery/delivery.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/delivery/delivery.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/order/delivery/get_city_forecast.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/delivery/get_city_forecast.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/order/model/order.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/model/order.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/order/storage/database/storage_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/order/storage/database/storage_db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/order/storage/database/weather_storage_impl.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
