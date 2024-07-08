@@ -5,13 +5,13 @@ import (
 	"go.uber.org/zap"
 )
 
-type OrderDelivery struct {
-	service service.OrderService
+type WeatherDelivery struct {
+	service service.WeatherService
 	logger  *zap.SugaredLogger
 }
 
-func New(service service.OrderService, logger *zap.SugaredLogger) *OrderDelivery {
-	return &OrderDelivery{
+func New(service service.WeatherService, logger *zap.SugaredLogger) *WeatherDelivery {
+	return &WeatherDelivery{
 		service: service,
 		logger:  logger,
 	}

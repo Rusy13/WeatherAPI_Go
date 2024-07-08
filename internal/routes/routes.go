@@ -8,18 +8,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetRouter(handlers *delivery.OrderDelivery, mw *middleware.Middleware) *mux.Router {
+func GetRouter(handlers *delivery.WeatherDelivery, mw *middleware.Middleware) *mux.Router {
 	router := mux.NewRouter()
 	assignRoutes(router, handlers)
 	assignMiddleware(router, mw)
 	return router
 }
 
-func assignRoutes(router *mux.Router, handlers *delivery.OrderDelivery) {
-	router.HandleFunc("/order", handlers.AddOrder).Methods(http.MethodPost)
-	router.HandleFunc("/order/{id}", handlers.GetOrder).Methods(http.MethodGet)
-	router.HandleFunc("/", serveHTMLFile) // Добавьте этот обработчик для обслуживания HTML файла
-
+func assignRoutes(router *mux.Router, handlers *delivery.WeatherDelivery) {
+	router.HandleFunc("/cities", handlers.GetCities).Methods(http.MethodGet)
+	router.HandleFunc("/city/{city}/forecast", handlers.GetCityForecast).Methods(http.MethodGet)
+	router.HandleFunc("/city/{city}/weather/{datetime}", handlers.GetWeatherByDateTime).Methods(http.MethodGet)
 }
 
 func assignMiddleware(router *mux.Router, mw *middleware.Middleware) {

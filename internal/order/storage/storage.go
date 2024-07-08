@@ -1,15 +1,14 @@
 package storage
 
 import (
-	"context"
-
 	"WbTest/internal/order/model"
-	"WbTest/internal/order/storage/database/dto"
+	"context"
 )
 
-type OrderStorage interface {
-	AddOrder(ctx context.Context, order model.Order) (*model.Order, error)
-	GetOrderByID(ctx context.Context, orderUID string) (*model.Order, error)
-	GetOrderFromCache(orderID string) (*dto.OrderFromCache, error)
-	SaveOrderToCache(bannerFromCache dto.OrderFromCache, orderID string) error
+// WeatherStorage определяет методы для работы с данными о погоде.
+type WeatherStorage interface {
+	SaveWeather(ctx context.Context, city string, weather model.Weather) error
+	GetCitiesWithWeather(ctx context.Context) ([]string, error)
+	GetCityForecast(ctx context.Context, city string) (*model.CityForecast, error)
+	GetWeatherByDateTime(ctx context.Context, city string, dateTime string) (*model.Weather, error)
 }

@@ -1,26 +1,45 @@
 package service
 
 import (
-	"WbTest/internal/order/storage/database/dto"
 	"context"
-	"go.uber.org/zap"
+	"time"
 
 	"WbTest/internal/order/model"
 	"WbTest/internal/order/storage"
 )
 
-type OrderService interface {
-	AddOrder(ctx context.Context, order model.Order) (*model.Order, error)
-	GetUserOrder(ctx context.Context, orderID string) (*dto.OrderFromCache, error)
+// WeatherService определяет методы для работы с данными о погоде.
+type WeatherService interface {
+	GetCitiesWithWeather(ctx context.Context) ([]string, error)
+	GetCityForecast(ctx context.Context, city string) (*model.CityForecast, error)
+	GetWeatherByDateTime(ctx context.Context, city string, dateTime time.Time) (*model.Weather, error)
 }
 
-type OrderServiceApp struct {
-	storage storage.OrderStorage
-	logger  *zap.Logger
+// WeatherServiceImpl реализует интерфейс WeatherService.
+type WeatherServiceImpl struct {
+	storage storage.WeatherStorage
 }
 
-func New(storage storage.OrderStorage) *OrderServiceApp {
-	return &OrderServiceApp{
+// NewWeatherService создает новый экземпляр WeatherServiceImpl.
+func New(storage storage.WeatherStorage) *WeatherServiceImpl {
+	return &WeatherServiceImpl{
 		storage: storage,
 	}
+}
+
+// GetCitiesWithWeather возвращает список городов, для которых есть данные о погоде.
+func (s *WeatherServiceImpl) GetCitiesWithWeather(ctx context.Context) ([]string, error) {
+	return s.storage.GetCitiesWithWeather(ctx)
+}
+
+// GetCityForecast возвращает прогноз погоды для указанного города.
+func (s *WeatherServiceImpl) GetCityForecast(ctx context.Context, city string) (*model.CityForecast, error) {
+	return s.storage.GetCityForecast(ctx, city)
+}
+
+// GetWeatherByDateTime возвращает данные о погоде для указанного города и времени.
+func (s *WeatherServiceImpl) GetWeatherByDateTime(ctx context.Context, city string, dateTime time.Time) (*model.Weather, error) {
+	// Приведение времени к формату, который используется в хранилище (если необходимо)
+	dateTimeStr := dateTime.Format("2006-01-02 15:04:05")
+	return s.storage.GetWeatherByDateTime(ctx, city, dateTimeStr)
 }
