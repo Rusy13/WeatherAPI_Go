@@ -4,6 +4,7 @@ import (
 	"WbTest/internal/infrastructure/database/postgres/database"
 	"WbTest/internal/order/model"
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/gomodule/redigo/redis"
@@ -84,7 +85,7 @@ func (s *WeatherStorageDB) GetCitiesWithWeather(ctx context.Context) ([]string, 
 }
 
 func (s *WeatherStorageDB) GetCityForecast(ctx context.Context, city string) (*model.CityForecast, error) {
-	query := `SELECT date, temp FROM weather WHERE city_name = $1 ORDER BY date`
+	query := `SELECT date, temp, data FROM weather WHERE city_name = $1 ORDER BY date`
 	rows, err := s.db.Query(ctx, query, city)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get forecast for city %s: %w", city, err)
@@ -94,9 +95,14 @@ func (s *WeatherStorageDB) GetCityForecast(ctx context.Context, city string) (*m
 	var forecasts []model.Weather
 	for rows.Next() {
 		var forecast model.Weather
-		err := rows.Scan(&forecast.DateTime, &forecast.Temperature)
+		var rawData []byte
+		err := rows.Scan(&forecast.DateTime, &forecast.Temperature, &rawData)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan forecast for city %s: %w", city, err)
+		}
+		err = json.Unmarshal(rawData, &forecast)
+		if err != nil {
+			return nil, fmt.Errorf("failed to unmarshal forecast data for city %s: %w", city, err)
 		}
 		forecasts = append(forecasts, forecast)
 	}
@@ -111,21 +117,34 @@ func (s *WeatherStorageDB) GetCityForecast(ctx context.Context, city string) (*m
 	}, nil
 }
 
-func (s *WeatherStorageDB) GetWeatherByDateTime(ctx context.Context, city string, dateTime string) (*model.Weather, error) {
-	query := `SELECT temp, humidity, wind_speed, weather_description, data FROM weather WHERE city_name = $1 AND date = $2`
+func (s *WeatherStorageDB) GetWeatherByDateTime(ctx context.Context, city string, dateTime string) (*model.WeatherData, error) {
+	query := `SELECT temp, data FROM weather WHERE city_name = $1 AND date = $2`
+	s.logger.Infof("Executing query: %s with city: %s and dateTime: %s", query, city, dateTime)
 	row := s.db.QueryRow(ctx, query, city, dateTime)
 
-	var weather model.Weather
+	var temperature float64
 	var rawData []byte
-	err := row.Scan(&weather.Temperature, &rawData)
+	err := row.Scan(&temperature, &rawData)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("no weather data found for city %s at datetime %s", city, dateTime)
+		}
 		return nil, fmt.Errorf("failed to get weather data for city %s at datetime %s: %w", city, dateTime, err)
 	}
 
-	err = json.Unmarshal(rawData, &weather)
+	var weatherDetails model.WeatherDetails
+	err = json.Unmarshal(rawData, &weatherDetails)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal weather data for city %s at datetime %s: %w", city, dateTime, err)
 	}
 
-	return &weather, nil
+	// Формирование структуры WeatherData
+	weatherData := &model.WeatherData{
+		CityName: city,
+		Temp:     temperature,
+		Date:     weatherDetails.DtTxt,
+		Data:     weatherDetails,
+	}
+
+	return weatherData, nil
 }

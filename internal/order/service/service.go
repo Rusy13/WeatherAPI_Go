@@ -12,7 +12,7 @@ import (
 type WeatherService interface {
 	GetCitiesWithWeather(ctx context.Context) ([]string, error)
 	GetCityForecast(ctx context.Context, city string) (*model.CityForecast, error)
-	GetWeatherByDateTime(ctx context.Context, city string, dateTime time.Time) (*model.Weather, error)
+	GetWeatherByDateTime(ctx context.Context, city string, dateTime time.Time) (*model.WeatherData, error)
 }
 
 // WeatherServiceImpl реализует интерфейс WeatherService.
@@ -38,7 +38,7 @@ func (s *WeatherServiceImpl) GetCityForecast(ctx context.Context, city string) (
 }
 
 // GetWeatherByDateTime возвращает данные о погоде для указанного города и времени.
-func (s *WeatherServiceImpl) GetWeatherByDateTime(ctx context.Context, city string, dateTime time.Time) (*model.Weather, error) {
+func (s *WeatherServiceImpl) GetWeatherByDateTime(ctx context.Context, city string, dateTime time.Time) (*model.WeatherData, error) {
 	// Приведение времени к формату, который используется в хранилище (если необходимо)
 	dateTimeStr := dateTime.Format("2006-01-02 15:04:05")
 	return s.storage.GetWeatherByDateTime(ctx, city, dateTimeStr)

@@ -11,32 +11,40 @@ import (
 )
 
 type Weather struct {
-	CityName string
-	Temp     float64
-	Date     string
-	Data     string
+	CityName    string
+	Temperature float64
+	DateTime    string
+	Data        string
 }
 
-func SaveWeather(db *PG.PGDatabase, cityName string, forecast []weather.Forecast) error {
-	query := `
-        INSERT INTO weather (city_name, temp, date, data)
-        VALUES ($1, $2, $3, $4)
-        ON CONFLICT (city_name, date) DO UPDATE 
-        SET temp = EXCLUDED.temp,
-            data = EXCLUDED.data;
-    `
-	for _, f := range forecast {
-		date := time.Unix(f.Dt, 0).Format("2006-01-02")
-		data, err := json.Marshal(f)
+func SaveWeatherJson(db *PG.PGDatabase, cityName string, bodyBytes []byte) error {
+	var response weather.WeatherResponse
+	err := json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal forecast JSON for city %s: %v", cityName, err)
+	}
+
+	for _, forecast := range response.List {
+		date := time.Unix(forecast.Dt, 0).Format("2006-01-02 15:04:05")
+		data, err := json.Marshal(forecast)
 		if err != nil {
-			return fmt.Errorf("failed to marshal forecast data: %w", err)
+			return fmt.Errorf("failed to marshal forecast data: %v", err)
 		}
 
-		_, err = db.Exec(context.Background(), query, cityName, f.Main.Temp, date, data)
+		query := `
+            INSERT INTO weather (city_name, date, temp, data)
+            VALUES ($1, $2, $3, $4)
+            ON CONFLICT (city_name, date) DO UPDATE 
+            SET temp = EXCLUDED.temp,
+                data = EXCLUDED.data;
+        `
+
+		_, err = db.Exec(context.Background(), query, cityName, date, forecast.Main.Temp, data)
 		if err != nil {
-			return fmt.Errorf("failed to save weather forecast: %w", err)
+			return fmt.Errorf("failed to save weather forecast: %v", err)
 		}
 	}
+
 	return nil
 }
 
@@ -45,7 +53,7 @@ func GetWeather(db *PG.PGDatabase, cityName, date string) (Weather, error) {
 	row := db.QueryRow(context.Background(), query, cityName, date)
 
 	var weather Weather
-	if err := row.Scan(&weather.CityName, &weather.Temp, &weather.Date, &weather.Data); err != nil {
+	if err := row.Scan(&weather.CityName, &weather.Temperature, &weather.DateTime, &weather.Data); err != nil {
 		if err == sql.ErrNoRows {
 			return weather, nil
 		}

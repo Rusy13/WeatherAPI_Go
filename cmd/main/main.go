@@ -5,6 +5,7 @@ import (
 	"WbTest/internal/infrastructure/weather"
 	dbcity "WbTest/internal/order/storage"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -128,13 +129,20 @@ func updateWeatherData(db *database.PGDatabase) {
 		wg.Add(1)
 		go func(city dbcity.City) {
 			defer wg.Done()
-			forecast, err := weather.GetWeatherForecast(fmt.Sprintf("%f", city.Latitude), fmt.Sprintf("%f", city.Longitude), apiKey)
+
+			response, err := weather.GetWeatherForecast(fmt.Sprintf("%f", city.Latitude), fmt.Sprintf("%f", city.Longitude), apiKey)
 			if err != nil {
 				log.Printf("Failed to get forecast for city %s: %v", city.Name, err)
 				return
 			}
 
-			err = DbCities.SaveWeather(db, city.Name, forecast.List)
+			forecastsBytes, err := json.Marshal(response)
+			if err != nil {
+				log.Printf("Failed to marshal forecast data for city %s: %v", city.Name, err)
+				return
+			}
+			
+			err = DbCities.SaveWeatherJson(db, city.Name, forecastsBytes)
 			if err != nil {
 				log.Printf("Failed to save forecast for city %s: %v", city.Name, err)
 			}

@@ -27,11 +27,10 @@ func (d *WeatherDelivery) GetCityForecast(w http.ResponseWriter, r *http.Request
 	}
 
 	type ForecastResponse struct {
-		Country        string          `json:"country"`
-		City           string          `json:"city"`
-		AverageTemp    float64         `json:"average_temperature"`
-		AvailableDates []string        `json:"available_dates"`
-		Forecasts      []model.Weather `json:"forecasts"`
+		Country     string          `json:"country"`
+		City        string          `json:"city"`
+		AverageTemp float64         `json:"average_temperature"`
+		Forecasts   []model.Weather `json:"forecasts"`
 	}
 
 	// Calculate average temperature
@@ -47,11 +46,10 @@ func (d *WeatherDelivery) GetCityForecast(w http.ResponseWriter, r *http.Request
 	averageTemp := totalTemp / float64(len(validForecasts))
 
 	response := ForecastResponse{
-		Country:        country,
-		City:           forecast.City,
-		AverageTemp:    averageTemp,
-		AvailableDates: forecast.AvailableDates,
-		Forecasts:      validForecasts,
+		Country:     country,
+		City:        forecast.City,
+		AverageTemp: averageTemp,
+		Forecasts:   validForecasts,
 	}
 
 	if response.Country == "" {
