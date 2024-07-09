@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"WbTest/internal/infrastructure/database/postgres/database"
-	"WbTest/internal/infrastructure/database/redis"
 	"WbTest/internal/middleware"
 	"WbTest/internal/order/delivery"
 	serviceOrder "WbTest/internal/order/service"
@@ -89,23 +88,17 @@ func main() {
 		}
 	}()
 
-	redisConn, err := redis.Init()
-	if err != nil {
-		logger.Fatalf("error on connection to redis: %v", err)
-	}
-	defer func() {
-		err = redisConn.Close()
-		if err != nil {
-			logger.Infof("error on redis close: %s", err.Error())
-		}
-	}()
+	stOrder := storageOrder.New(db, logger)
+	userStorage := storageOrder.NewUserStorageDB(db, logger)
 
-	stOrder := storageOrder.New(db, redisConn, logger)
 	svOrder := serviceOrder.New(stOrder)
+	userService := serviceOrder.NewUserService(userStorage)
+
 	d := delivery.New(svOrder, stOrder, logger)
+	userHandlers := delivery.NewUserHandler(userService)
 
 	mw := middleware.New(logger)
-	router := routes.GetRouter(d, mw)
+	router := routes.GetRouter(d, userHandlers, mw)
 
 	port := "8000"
 	addr := ":" + port

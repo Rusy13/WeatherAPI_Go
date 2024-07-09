@@ -66,3 +66,16 @@ type WeatherDetails struct {
 	} `json:"weather"`
 	Visibility int `json:"visibility"`
 }
+
+// User структура для данных о пользователе
+type User struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// FavoriteCity структура для избранных городов
+type FavoriteCity struct {
+	UserID   int    `json:"user_id"`
+	CityName string `json:"city_name"`
+}

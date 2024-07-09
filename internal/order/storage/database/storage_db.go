@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/gomodule/redigo/redis"
 	"go.uber.org/zap"
 )
 
@@ -15,15 +14,13 @@ const expireTime = 15
 
 type WeatherStorageDB struct {
 	db              database.Database
-	redisConn       redis.Conn
 	cacheExpireTime int
 	logger          *zap.SugaredLogger
 }
 
-func New(db database.Database, redisConn redis.Conn, logger *zap.SugaredLogger) *WeatherStorageDB {
+func New(db database.Database, logger *zap.SugaredLogger) *WeatherStorageDB {
 	return &WeatherStorageDB{
 		db:              db,
-		redisConn:       redisConn,
 		cacheExpireTime: expireTime,
 		logger:          logger,
 	}
