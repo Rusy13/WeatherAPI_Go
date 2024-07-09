@@ -76,7 +76,7 @@ func main() {
 
 	// Фоновый процесс для обновления данных о погоде
 	go func() {
-		ticker := time.NewTicker(10 * time.Second)
+		ticker := time.NewTicker(1 * time.Minute)
 		log.Printf("NewTicker")
 		defer ticker.Stop()
 		for {
@@ -125,6 +125,9 @@ func updateWeatherData(db *database.PGDatabase) {
 	var wg sync.WaitGroup
 	apiKey := "a0685ac1c3e28d3319a052a1d6897687"
 
+	//Дополнительно. Распараллелить процесс получения информации о
+	//погоде из внешнего API
+
 	for _, city := range cityList {
 		wg.Add(1)
 		go func(city dbcity.City) {
@@ -141,7 +144,7 @@ func updateWeatherData(db *database.PGDatabase) {
 				log.Printf("Failed to marshal forecast data for city %s: %v", city.Name, err)
 				return
 			}
-			
+
 			err = DbCities.SaveWeatherJson(db, city.Name, forecastsBytes)
 			if err != nil {
 				log.Printf("Failed to save forecast for city %s: %v", city.Name, err)
