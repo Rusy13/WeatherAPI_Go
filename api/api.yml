@@ -1,148 +1,44 @@
 openapi: 3.0.0
 info:
-  title: Сервис баннеров
+  title: Weather and User Management API
   version: 1.0.0
 paths:
-  /user_banner:
+  /cities:
     get:
-      summary: Получение баннера для пользователя
-      parameters:
-        - in: query
-          name: tag_id
-          required: true
-          schema:
-            type: integer
-            description: Тэг пользователя
-        - in: query
-          name: feature_id
-          required: true
-          schema:
-            type: integer
-            description: Идентификатор фичи
-        - in: query
-          name: use_last_revision
-          required: false
-          schema:
-            type: boolean
-            default: false
-            description: Получать актуальную информацию
-        - in: header
-          name: token
-          description: Токен пользователя
-          schema:
-            type: string
-            example: "user_token"
+      summary: Get a list of cities
       responses:
         '200':
-          description: Баннер пользователя
-          content:
-            application/json:
-              schema:
-                description: JSON-отображение баннера
-                type: object
-                additionalProperties: true
-                example: '{"title": "some_title", "text": "some_text", "url": "some_url"}'
-        '400':
-          description: Некорректные данные
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-        '401':
-          description: Пользователь не авторизован
-        '403':
-          description: Пользователь не имеет доступа
-        '404':
-          description: Баннер для не найден
-        '500':
-          description: Внутренняя ошибка сервера
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-  /banner:
-    get:
-      summary: Получение всех баннеров c фильтрацией по фиче и/или тегу
-      parameters:
-        - in: header
-          name: token
-          description: Токен админа
-          schema:
-            type: string
-            example: "admin_token"
-        - in: query
-          name: feature_id
-          required: false
-          schema:
-            type: integer
-            description: Идентификатор фичи
-        - in: query
-          name: tag_id
-          required: false
-          schema:
-            type: integer
-            description: Идентификатор тега
-        - in: query
-          name: limit
-          required: false
-          schema:
-            type: integer
-            description: Лимит
-        - in: query
-          name: offset
-          required: false
-          schema:
-            type: integer
-            description: Оффсет
-      responses:
-        '200':
-          description: OK
+          description: A list of cities
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    banner_id:
-                      type: integer
-                      description: Идентификатор баннера
-                    tag_ids:
-                      type: array
-                      description: Идентификаторы тэгов
-                      items:
-                        type: integer
-                    feature_id:
-                      type: integer
-                      description: Идентификатор фичи
-                    content:
-                      type: object
-                      description: Содержимое баннера
-                      additionalProperties: true
-                      example: '{"title": "some_title", "text": "some_text", "url": "some_url"}'
-                    is_active:
-                      type: boolean
-                      description: Флаг активности баннера
-                    created_at:
-                      type: string
-                      format: date-time
-                      description: Дата создания баннера
-                    updated_at:
-                      type: string
-                      format: date-time
-                      description: Дата обновления баннера
-        '401':
-          description: Пользователь не авторизован
-        '403':
-          description: Пользователь не имеет доступа
+                  type: string
+              example: [
+                "Austin",
+                "Charlotte",
+                "Chicago",
+                "Columbus",
+                "Dallas",
+                "Denver",
+                "Fort Worth",
+                "Houston",
+                "Indianapolis",
+                "Jacksonville",
+                "London",
+                "Los Angeles",
+                "Philadelphia",
+                "Phoenix",
+                "San Antonio",
+                "San Diego",
+                "San Francisco",
+                "San Jose",
+                "Seattle",
+                "Washington"
+              ]
         '500':
-          description: Внутренняя ошибка сервера
+          description: Internal server error
           content:
             application/json:
               schema:
@@ -150,15 +46,160 @@ paths:
                 properties:
                   error:
                     type: string
-    post:
-      summary: Создание нового баннера
+
+  /city/{city}/forecast:
+    get:
+      summary: Get the forecast for a city
       parameters:
-        - in: header
-          name: token
-          description: Токен админа
+        - in: path
+          name: city
+          required: true
           schema:
             type: string
-            example: "admin_token"
+            description: The name of the city
+      responses:
+        '200':
+          description: The forecast for the city
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  country:
+                    type: string
+                  city:
+                    type: string
+                  average_temperature:
+                    type: number
+                  forecasts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date_time:
+                          type: string
+                          format: date-time
+                        temperature:
+                          type: number
+              example:
+                country: "GB"
+                city: "London"
+                average_temperature: 17.30142857142857
+                forecasts:
+                  - date_time: "2024-07-09T00:00:00Z"
+                    temperature: 17.18
+                  - date_time: "2024-07-10T00:00:00Z"
+                    temperature: 19.57
+                  - date_time: "2024-07-11T00:00:00Z"
+                    temperature: 19.48
+                  - date_time: "2024-07-12T00:00:00Z"
+                    temperature: 12.59
+                  - date_time: "2024-07-13T00:00:00Z"
+                    temperature: 17.27
+                  - date_time: "2024-07-14T00:00:00Z"
+                    temperature: 19.3
+                  - date_time: "2024-07-15T00:00:00Z"
+                    temperature: 15.72
+        '404':
+          description: City not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /city/{city}/weather/{datetime}:
+    get:
+      summary: Get the weather for a city at a specific date and time
+      parameters:
+        - in: path
+          name: city
+          required: true
+          schema:
+            type: string
+            description: The name of the city
+        - in: path
+          name: datetime
+          required: true
+          schema:
+            type: string
+            format: date-time
+            description: The date and time for the weather data
+      responses:
+        '200':
+          description: The weather data for the city at the specified date and time
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  city_name:
+                    type: string
+                  temp:
+                    type: number
+                  date:
+                    type: string
+                  data:
+                    type: object
+              example:
+                city_name: "London"
+                temp: 17.18
+                date: "2024-07-09 18:00:00"
+                data:
+                  dt: 1720548000
+                  pop: 1
+                  sys:
+                    pod: "d"
+                  main:
+                    temp: 17.18
+                  rain:
+                    3h: 0.17
+                  wind:
+                    deg: 194
+                    gust: 9.53
+                    speed: 3.62
+                  clouds:
+                    all: 100
+                  dt_txt: "2024-07-09 18:00:00"
+                  weather:
+                    - id: 500
+                      icon: "10d"
+                      main: "Rain"
+                      description: "light rain"
+                  visibility: 10000
+        '404':
+          description: City or weather data not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /register:
+    post:
+      summary: Register a new user
       requestBody:
         required: true
         content:
@@ -166,35 +207,30 @@ paths:
             schema:
               type: object
               properties:
-                tag_ids:
-                  type: array
-                  description: Идентификаторы тэгов
-                  items:
-                    type: integer
-                feature_id:
-                  type: integer
-                  description: Идентификатор фичи
-                content:
-                  type: object
-                  description: Содержимое баннера
-                  additionalProperties: true
-                  example: '{"title": "some_title", "text": "some_text", "url": "some_url"}'
-                is_active:
-                  type: boolean
-                  description: Флаг активности баннера
+                username:
+                  type: string
+                password:
+                  type: string
       responses:
         '201':
-          description: Created
+          description: User registered successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  banner_id:
+                  id:
                     type: integer
-                    description: Идентификатор созданного баннера
+                  username:
+                    type: string
+                  password:
+                    type: string
+              example:
+                id: 3
+                username: "exampleUser3"
+                password: "examplePassword3"
         '400':
-          description: Некорректные данные
+          description: Invalid input
           content:
             application/json:
               schema:
@@ -202,12 +238,8 @@ paths:
                 properties:
                   error:
                     type: string
-        '401':
-          description: Пользователь не авторизован
-        '403':
-          description: Пользователь не имеет доступа
         '500':
-          description: Внутренняя ошибка сервера
+          description: Internal server error
           content:
             application/json:
               schema:
@@ -215,22 +247,10 @@ paths:
                 properties:
                   error:
                     type: string
-  /banner/{id}:
-    patch:
-      summary: Обновление содержимого баннера
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            description: Идентификатор баннера
-        - in: header
-          name: token
-          description: Токен админа
-          schema:
-            type: string
-            example: "admin_token"
+
+  /login:
+    post:
+      summary: Log in a user
       requestBody:
         required: true
         content:
@@ -238,31 +258,30 @@ paths:
             schema:
               type: object
               properties:
-                tag_ids:
-                  nullable: true
-                  type: array
-                  description: Идентификаторы тэгов
-                  items:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
                     type: integer
-                feature_id:
-                  nullable: true
-                  type: integer
-                  description: Идентификатор фичи
-                content:
-                  nullable: true
-                  type: object
-                  description: Содержимое баннера
-                  additionalProperties: true
-                  example: '{"title": "some_title", "text": "some_text", "url": "some_url"}'
-                is_active:
-                  nullable: true
-                  type: boolean
-                  description: Флаг активности баннера
-      responses:
-        '200':
-          description: OK
+                  username:
+                    type: string
+                  password:
+                    type: string
+              example:
+                id: 1
+                username: "exampleUser"
+                password: "examplePassword"
         '400':
-          description: Некорректные данные
+          description: Invalid username or password
           content:
             application/json:
               schema:
@@ -270,14 +289,8 @@ paths:
                 properties:
                   error:
                     type: string
-        '401':
-          description: Пользователь не авторизован
-        '403':
-          description: Пользователь не имеет доступа
-        '404':
-          description: Баннер не найден
         '500':
-          description: Внутренняя ошибка сервера
+          description: Internal server error
           content:
             application/json:
               schema:
@@ -285,136 +298,53 @@ paths:
                 properties:
                   error:
                     type: string
-    delete:
-      summary: Удаление баннера по идентификатору
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            description: Идентификатор баннера
-        - in: header
-          name: token
-          description: Токен админа
-          schema:
-            type: string
-            example: "admin_token"
-      responses:
-        '204':
-          description: Баннер успешно удален
-        '400':
-          description: Некорректные данные
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-        '401':
-          description: Пользователь не авторизован
-        '403':
-          description: Пользователь не имеет доступа
-        '404':
-          description: Баннер для тэга не найден
-        '500':
-          description: Внутренняя ошибка сервера
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-  /banner{id}/versions:
-    get:
-      summary: Получение предыдущих версий баннера
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            description: Идентификатор баннера
-        - in: header
-          name: token
-          description: Токен админа
-          schema:
-            type: string
-            example: "admin_token"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    version_id:
-                      type: integer
-                      description: Идентификатор версии
-                    banner_id:
-                      type: integer
-                      description: Идентификаторы баннера
-                      items:
-                        type: integer
-                    content:
-                      type: object
-                      description: Содержимое баннера
-                      additionalProperties: true
-                      example: '{"title": "some_title", "text": "some_text", "url": "some_url"}'
-                    is_active:
-                      type: boolean
-                      description: Флаг активности баннера
-                    updated_at:
-                      type: string
-                      format: date-time
-                      description: Дата обновления баннера
-        '401':
-          description: Пользователь не авторизован
-        '403':
-          description: Пользователь не имеет доступа
-        '404':
-          description: Баннер не найден
-        '500':
-          description: Внутренняя ошибка сервера
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-  /banner/versions{id}:
+
+  /favorite:
     post:
-      summary: Откат к предыдущей версии баннера
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            description: Идентификатор версии
-        - in: header
-          name: token
-          description: Токен админа
-          schema:
-            type: string
-            example: "admin_token"
+      summary: Add a favorite city for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                city_name:
+                  type: string
       responses:
         '201':
-          description: Откат произошёл успешно
-        '401':
-          description: Пользователь не авторизован
-        '403':
-          description: Пользователь не имеет доступа
+          description: Favorite city added successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '404':
-          description: Версия не найден
+          description: User or city not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '409':
+          description: Duplicate entry for favorite city
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '500':
-          description: Внутренняя ошибка сервера
+          description: Internal server error
           content:
             application/json:
               schema:
