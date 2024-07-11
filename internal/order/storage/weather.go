@@ -17,7 +17,7 @@ type Weather struct {
 	Data        string
 }
 
-func SaveWeatherJson(db *PG.PGDatabase, cityName string, bodyBytes []byte) error {
+func SaveWeatherJson(db PG.Database, cityName string, bodyBytes []byte) error {
 	var response weather.WeatherResponse
 	err := json.Unmarshal(bodyBytes, &response)
 	if err != nil {
@@ -48,7 +48,7 @@ func SaveWeatherJson(db *PG.PGDatabase, cityName string, bodyBytes []byte) error
 	return nil
 }
 
-func GetWeather(db *PG.PGDatabase, cityName, date string) (Weather, error) {
+func GetWeather(db PG.Database, cityName, date string) (Weather, error) {
 	query := `SELECT city_name, temp, date, data FROM weather WHERE city_name = $1 AND date = $2`
 	row := db.QueryRow(context.Background(), query, cityName, date)
 
