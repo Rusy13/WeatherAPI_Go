@@ -39,7 +39,7 @@ func TestGetWeather(t *testing.T) {
 	date := "2021-07-20 10:00:00"
 	expectedWeather := Weather{
 		CityName:    cityName,
-		Temperature: 30.5, // Изменяем ожидаемую температуру, чтобы вызвать ошибку
+		Temperature: 25.5, // Изменяем ожидаемую температуру, чтобы вызвать ошибку
 		DateTime:    date,
 		Data:        `{"dt":1626817200,"main":{"temp":25.5}}`,
 	}
