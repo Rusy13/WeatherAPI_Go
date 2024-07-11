@@ -1,7 +1,7 @@
 package geocoding
 
 import (
-	dbcity "WbTest/internal/order/storage"
+	dbcity "WbTest/internal/weather/storage"
 	"encoding/json"
 	"fmt"
 	"net/http"

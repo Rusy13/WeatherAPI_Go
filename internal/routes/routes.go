@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"WbTest/internal/middleware"
-	"WbTest/internal/order/delivery"
+	"WbTest/internal/weather/delivery"
 	"github.com/gorilla/mux"
 )
 

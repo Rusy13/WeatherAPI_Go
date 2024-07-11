@@ -3,7 +3,7 @@ package main
 import (
 	"WbTest/internal/infrastructure/geocoding"
 	"WbTest/internal/infrastructure/weather"
-	dbcity "WbTest/internal/order/storage"
+	dbcity "WbTest/internal/weather/storage"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -14,11 +14,11 @@ import (
 
 	"WbTest/internal/infrastructure/database/postgres/database"
 	"WbTest/internal/middleware"
-	"WbTest/internal/order/delivery"
-	serviceOrder "WbTest/internal/order/service"
-	DbCities "WbTest/internal/order/storage"
-	storageOrder "WbTest/internal/order/storage/database"
 	"WbTest/internal/routes"
+	"WbTest/internal/weather/delivery"
+	serviceOrder "WbTest/internal/weather/service"
+	DbCities "WbTest/internal/weather/storage"
+	storageOrder "WbTest/internal/weather/storage/database"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
 )
