@@ -2,7 +2,7 @@
 # Примеры запросов <a name="examples"></a>
 
 
-* [Списка городов: GET http://localhost:8000/cities]
+* [Список городов: GET http://localhost:8000/cities]
 
 
 * [Список с кратким предсказанием для выбранного города: GET http://localhost:8000/city/{city}/forecast]
